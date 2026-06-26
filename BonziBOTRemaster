@@ -1,0 +1,238 @@
+const prefix = "b!";
+const botname = "BonziBOT Remaster (" + prefix + "help)";
+const version = "0.1 BETA";
+let lockcmd = false; 
+
+// Updated help list to include new commands
+var help = "__**Bonzi's Bot Commands**__\n" +
+    "b!help | b!say {TEXT} | b!joke | b!aplle | b!noob | b!llama | b!source | b!parrot | b!cow | b!camel | b!gibberish | b!josephify | b!jzify | b!gokid | b!giko | b!fact | b!freepope | b!backflip | b!asshole\n" +
+    "__**New Commands:**__\n" +
+    "b!8ball {QUESTION} | b!mock {TEXT} | b!reverse {TEXT} | b!hug {USER} | b!slap {USER} | b!bonzi | b!color {COLOR} | b!hat {HAT} | b!reset";
+
+
+const nukelines = [
+    `AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA`,
+    `I JUST DID A BOOM BOOM!`,
+    `Goodbye everyone! I'm going to the purple void!`,
+    `Weeeeeeeeeeeeeeeeeee`,
+    `KaBLAM! There goes myself.`,
+    `AAAAAAAAAAAAAAAAAAAAA!`
+];
+const nukeline = nukelines[Math.floor(Math.random() * nukelines.length)];
+
+const otherUserNukes = [
+    "KaBLAM! There goes that bonzi",
+    "KaBOOM! That bonzi did a boom boom!",
+    "[[kabum]]",
+    "[[kabum]]! That bonzi did a [[bum bum]]"
+];
+
+// 8ball responses array
+const eightBallResponses = [
+    "It is certain.", "It is decidedly so.", "Without a doubt.", 
+    "Yes definitely.", "You may rely on it.", "As I see it, yes.", 
+    "Most likely.", "Outlook good.", "Yes.", "Signs point to yes.", 
+    "Reply hazy, try again.", "Ask again later.", "Better not tell you now.", 
+    "Cannot predict now.", "Concentrate and ask again.", "Don't count on it.", 
+    "My reply is no.", "My sources say no.", "Outlook not so good.", "Very doubtful."
+];
+
+// Helper function to make mocking text (MoCkInG LiKe ThIs)
+function mockText(str) {
+    return str.split('').map((char, i) => i % 2 === 0 ? char.toLowerCase() : char.toUpperCase()).join('');
+}
+
+function sendMsg(msg) {
+    setTimeout(() => {
+        socket.emit("talk", {text: msg});
+    }, 1100);
+}
+
+setTimeout(() => socket.emit("command", {list: ["name", botname]}), 1000);
+setTimeout(() => socket.emit("command", {list: ["none", botname]}), 2100);
+setTimeout(() => socket.emit("command", {list: ["color", "white tophat"]}), 3200);
+
+setTimeout(() => {
+    sendMsg("BonziBOT is online. Type " + prefix + "help to see commands.");
+    setInterval(() => sendMsg("SGD's Bot Is Here, Type s!help For Commands."), 60000);
+}, 4300);
+
+socket.on("nuked", () => { sendMsg(nukeline) });
+socket.on("nuke", (data) => {
+    const otherUserNuke = otherUserNukes[Math.floor(Math.random() * otherUserNukes.length)];
+    sendMsg(otherUserNuke);
+});
+
+socket.on("talk", (message) => {
+    if(message.text == prefix + "help") {
+        sendMsg(help);
+    }
+    
+    if(message.text.startsWith(prefix + "say")) {
+        sendMsg(message.text.substring(prefix.length + 3));
+    }
+
+    if (message.text === prefix + "aplle") {
+        return sendMsg("ew, apple.\n yay, aplle"); 
+    }
+    
+    if (message.text === prefix + "llama") {
+        cmd(`img https://files.catbox.moe/qkbzrk.jpeg`);
+    }
+
+    
+    if (message.text === prefix + "joke") {
+        cmd(`joke`);
+    }
+        if (message.text === prefix + "fact") {
+        cmd(`fact`);
+    }
+    if (message.text === prefix + "backflip") {
+        cmd(`backflip`);
+    }
+    if (message.text === prefix + "freepope") {
+        cmd(`freepope`);
+    }
+    
+    
+    if (text.startsWith(prefix + "asshole")) {
+        if (botCannotAsshole === true) {
+            sendMsg("disabled")
+        }
+        if (botCannotAsshole === false) {
+            cmd(`asshole ${text.substring(prefix.length + 7)}`);
+        }
+    }
+
+    if (message.text === prefix + "source") {
+        sendMsg(`-moved to ${prefix}links`);
+    }
+    
+    if (message.text === prefix + "parrot") {
+        cmd(`img https://files.catbox.moe/9xklj5.jpeg`);
+    }
+    
+    if (message.text === prefix + "cow") {
+        cmd(`image https://files.catbox.moe/91ab4p.jpeg`);
+    }
+       if (message.text === prefix + "giko") {
+        cmd(`image https://files.catbox.moe/lgg7qh.png`);
+    }
+     
+    if (message.text === prefix + "camel") {
+        cmd(`image https://files.catbox.moe/yesz9i.png`);
+    }
+    
+    if (message.text === prefix + "noob") {
+        cmd(`image https://files.catbox.moe/npzky7.webp`);
+    }
+    
+    
+    if (message.text.startsWith(prefix + "gibberish")) {
+        const gibberishlang = ["[[_^_cmn]]", "[[_^_vi]]", "[[_^_en]]", "[[_^_es]]", "[[_^_fr]]", "[[_^_de]]", "[[_^_it]]", "[[_^_pt]]", "[[_^_ru]]", "[[_^_ja]]", "[[_^_ko]]", "[[_^_zh]]"];
+        const gibberishmessage = ["h@x du da de d3!", "tygtyty@", "@plle p0i", "sal@d@", "Hs @e", "p03 ere mu", "ooer nooer", "i?", "r0RRRR", "b0303er n030303r"];
+        sendMsg(gibberishlang[Math.floor(Math.random() * gibberishlang.length)] + " " + gibberishmessage[Math.floor(Math.random() * gibberishmessage.length)]);
+    }
+    
+    if (message.text === prefix + "josephify") {
+        cmd(`color yellow`);
+        cmd(`hat tophat`);
+        cmd(`name Emperor Joseph`);
+        sendMsg(`^^**MY EMPERORS!**^^`);
+    }
+    
+    if (message.text === prefix + "jzify") {
+        cmd(`color purple`);
+        cmd(`hat glitch`);
+        cmd(`name jzbot ${prefix}help`);
+        sendMsg(`yo, try ${prefix}help. or ${prefix}source if you want my boy, bot.`);
+    }
+    
+    if (message.text.startsWith(prefix + "gokid")) {
+        if (lockcmd === true) {
+            sendMsg("disabled");
+        } else {
+            const userxd = message.text.substring(prefix.length + 6);
+            const gokids = [
+                `${userxd}, your a gokid!`,
+                `Hey, ${userxd}! You're a freaking gokid!`
+            ];
+            const gokid = gokids[Math.floor(Math.random() * gokids.length)];
+            return sendMsg(gokid);
+        }
+    }
+
+    // ==========================================
+    // NEW COMMANDS START HERE
+    // ==========================================
+
+    // Magic 8-Ball Command
+    if (message.text.startsWith(prefix + "8ball ")) {
+        const question = message.text.substring(prefix.length + 6);
+        if (!question.trim()) return sendMsg("You need to ask a question!");
+        const answer = eightBallResponses[Math.floor(Math.random() * eightBallResponses.length)];
+        sendMsg("🎱 " + answer);
+    }
+
+    // Mocking Text Command
+    if (message.text.startsWith(prefix + "mock ")) {
+        const mockTarget = message.text.substring(prefix.length + 5);
+        if (!mockTarget.trim()) return sendMsg("What do you want me to mock?");
+        sendMsg(mockText(mockTarget));
+    }
+
+    // Reverse Text Command
+    if (message.text.startsWith(prefix + "reverse ")) {
+        const revText = message.text.substring(prefix.length + 8);
+        if (!revText.trim()) return sendMsg("Provide text to reverse!");
+        sendMsg(revText.split('').reverse().join(''));
+    }
+
+    // Hug Command
+    if (message.text.startsWith(prefix + "hug ")) {
+        const hugTarget = message.text.substring(prefix.length + 4);
+        if (!hugTarget.trim()) return sendMsg("Who do you want me to hug?");
+        sendMsg(`*gives ${hugTarget} a big, warm purple gorilla hug*`);
+    }
+
+    // Slap Command
+    if (message.text.startsWith(prefix + "slap ")) {
+        const slapTarget = message.text.substring(prefix.length + 5);
+        if (!slapTarget.trim()) return sendMsg("Who do you want me to slap?");
+        const slapResponses = [
+            `*slaps ${slapTarget} with a giant banana*`,
+            `*slaps ${slapTarget} across the room*`,
+            `*violently slaps ${slapTarget} with a keyboard*`
+        ];
+        sendMsg(slapResponses[Math.floor(Math.random() * slapResponses.length)]);
+    }
+
+    // Classic Bonzi Quote
+    if (message.text === prefix + "bonzi") {
+        sendMsg("Hehehehe! BonziBUDDY is here to help you browse the internet! Would you like to install a free cursor?");
+    }
+
+    // Custom Color Command (e.g., b!color red)
+    if (message.text.startsWith(prefix + "color ")) {
+        const newColor = message.text.substring(prefix.length + 6).trim().toLowerCase();
+        if (!newColor) return sendMsg("What color should I become?");
+        cmd(`color ${newColor}`);
+        sendMsg(`Poof! I am now ${newColor}.`);
+    }
+
+    // Custom Hat Command (e.g., b!hat none, b!hat tophat)
+    if (message.text.startsWith(prefix + "hat ")) {
+        const newHat = message.text.substring(prefix.length + 4).trim().toLowerCase();
+        if (!newHat) return sendMsg("What hat should I wear?");
+        cmd(`hat ${newHat}`);
+        sendMsg(`Putting on my ${newHat}!`);
+    }
+
+    // Reset Bot Appearance
+    if (message.text === prefix + "reset") {
+        cmd(`color white`);
+        cmd(`hat tophat`);
+        cmd(`name ${botname}`);
+        sendMsg("Reset back to default BonziBOT!");
+    }
+});
