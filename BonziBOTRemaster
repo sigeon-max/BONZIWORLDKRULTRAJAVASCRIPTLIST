@@ -922,14 +922,8 @@ socket.on("talk", (message) => {
     // ASSHOLE
     // ========================================================
 
-   if (text.startsWith(prefix + "asshole")) {
-        if (botCannotAsshole === true) {
-            sendMsg("disabled")
-        }
-        if (botCannotAsshole === false) {
-            cmd(`asshole ${text.substring(prefix.length + 7)}`);
-        }
-    }
+    if (text.startsWith(prefix + "asshole")) return socket.emit("command", { list: ["asshole", text.substring(prefix.length + 7)] });
+    
 
     // ========================================================
     // SOURCE
