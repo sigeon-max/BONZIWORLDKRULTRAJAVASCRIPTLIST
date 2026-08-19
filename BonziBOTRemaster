@@ -922,21 +922,13 @@ socket.on("talk", (message) => {
     // ASSHOLE
     // ========================================================
 
-    if (text.startsWith(prefix + "asshole")) {
-        if (typeof botCannotAsshole !== "undefined") {
-            if (botCannotAsshole === true) {
-                return sendMsg("disabled");
-            }
-
-            if (botCannotAsshole === false) {
-                return cmd(
-                    "asshole " +
-                    text.substring(prefix.length + 7)
-                );
-            }
+   if (text.startsWith(prefix + "asshole")) {
+        if (botCannotAsshole === true) {
+            sendMsg("disabled")
         }
-
-        return sendMsg("disabled");
+        if (botCannotAsshole === false) {
+            cmd(`asshole ${text.substring(prefix.length + 7)}`);
+        }
     }
 
     // ========================================================
