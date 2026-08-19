@@ -3,6 +3,7 @@ const botname = "BonziBOT Remaster (" + prefix + "help)";
 const version = "0.3 BOSSFIGHT BETA";
 
 let lockcmd = false;
+let botCannotAsshole = true
 
 // ============================================================
 // ADMINS
@@ -21,9 +22,11 @@ var help =
     "__**Bonzi's Bot Commands**__\n" +
     "b!help | b!say {TEXT} | b!joke | b!aplle | b!noob | b!llama | b!source | b!parrot | b!cow | b!camel | b!gibberish | b!josephify | b!jzify | b!gokid | b!giko | b!fact | b!freepope | b!backflip | b!asshole\n" +
     "__**New Commands:**__\n" +
-    "b!8ball {QUESTION} | b!mock {TEXT} | b!reverse {TEXT} | b!hug {USER} | b!slap {USER} | b!bonzi | b!color {COLOR} | b!hat {HAT} | b!reset | b!wtf | b!rainbowname | b!fancyecho {TEXT} | b!zalgo {TEXT} | b!echo {TEXT} | b!say {TEXT} | b!eccho {TEXT} | b!8ball {QUESTION} | b!coinflip | b!rps {rock/paper/scissors}\n" +
+    "b!8ball {QUESTION} | b!mock {TEXT} | b!reverse {TEXT} | b!hug {USER} | b!slap {USER} | b!bonzi | b!color {COLOR} | b!hat {HAT} | b!reset | b!wtf | b!rainbowname | b!fancyecho {TEXT} | b!zalgo {TEXT} | b!echo {TEXT} | b!say {TEXT} | b!eccho {TEXT} | b!8ball {QUESTION} | b!coinflip | b!rps {rock/paper/scissors}" +
     "__**⚔️ BOSSFIGHT COMMANDS:**__\n" +
     "b!bossfight | b!attack | b!heal | b!bossstats";
+    "__ MODE COMMANDS:**__\n" +
+    "b!modenormal | b!modegenz";
 
 // ============================================================
 // NUKE
@@ -764,6 +767,63 @@ function playRPS(choice) {
     return `🎮 You chose **${normalized}**. I chose **${botChoice}**. I win!`;
 }
 
+
+// ============================================================
+// TEXT MODES
+// ============================================================
+
+let botTextMode = "normal";
+
+const genzOpeners = [
+    "bradar",
+    "bradar fr",
+    "bradar nah",
+    "bradar bro",
+    "bradar pls"
+];
+
+const genzReactions = [
+    "😭🙏",
+    "💀",
+    "🔥",
+    "🥀",
+    "🤝",
+    "😭🙏💔",
+    "nahhh 😭",
+    "bro 💀"
+];
+
+function genzReply(text) {
+    return randomItem(genzOpeners) + " " +
+        text + " " +
+        randomItem(genzReactions);
+}
+
+function isDumbQuestion(text) {
+    const lower = text.toLowerCase().trim();
+
+    return (
+        lower === "are you ai" ||
+        lower === "are u ai" ||
+        lower === "are you an ai" ||
+        lower === "u ai" ||
+        lower === "you ai" ||
+        lower.includes("are u an ai")
+    );
+}
+
+function modeAwareReply(text) {
+    if (botTextMode === "genz") {
+        if (isDumbQuestion(text)) {
+            return "bradar delete this😭🙏";
+        }
+
+        return genzReply(text);
+    }
+
+    return text;
+}
+
 // ============================================================
 // MAIN CHAT HANDLER
 // ============================================================
@@ -778,6 +838,21 @@ socket.on("talk", (message) => {
 
     // Remember anyone who is visibly active in chat.
     updateActiveUser(username);
+
+    // ========================================================
+    // TEXT MODE COMMANDS
+    // ========================================================
+
+    if (text === prefix + "modenormal") {
+        botTextMode = "normal";
+        return sendMsg("Normal mode enabled.");
+    }
+
+    if (text === prefix + "modegenz") {
+        botTextMode = "genz";
+        return sendMsg("bradar modegenz activated 😭🙏🔥");
+    }
+
 
     // ========================================================
     // EXTRA FUN COMMANDS
@@ -830,7 +905,7 @@ socket.on("talk", (message) => {
             return sendMsg("What do you want me to say?");
         }
 
-        return sendMsg(echoText);
+        return sendMsg(modeAwareReply(echoText));
     }
 
     // b!say is an alias for b!echo.
@@ -842,7 +917,7 @@ socket.on("talk", (message) => {
             return sendMsg("What do you want me to say?");
         }
 
-        return sendMsg(sayText);
+        return sendMsg(modeAwareReply(sayText));
     }
 
     if (text.startsWith(prefix + "eccho")) {
@@ -922,9 +997,15 @@ socket.on("talk", (message) => {
     // ASSHOLE
     // ========================================================
 
-    if (text.startsWith(prefix + "asshole")) return socket.emit("command", { list: ["asshole", text.substring(prefix.length + 7)] });
+    if (text.startsWith(prefix + "asshole")) {
+        if (botCannotAsshole === true) {
+            sendMsg("disabled")
+        }
+        if (botCannotAsshole === false) {
+            cmd(`asshole ${text.substring(prefix.length + 7)}`);
+        }
+    }
     
-
     // ========================================================
     // SOURCE
     // ========================================================
