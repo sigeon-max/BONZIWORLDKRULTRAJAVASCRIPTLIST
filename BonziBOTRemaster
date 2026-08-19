@@ -21,7 +21,7 @@ var help =
     "__**Bonzi's Bot Commands**__\n" +
     "b!help | b!say {TEXT} | b!joke | b!aplle | b!noob | b!llama | b!source | b!parrot | b!cow | b!camel | b!gibberish | b!josephify | b!jzify | b!gokid | b!giko | b!fact | b!freepope | b!backflip | b!asshole\n" +
     "__**New Commands:**__\n" +
-    "b!8ball {QUESTION} | b!mock {TEXT} | b!reverse {TEXT} | b!hug {USER} | b!slap {USER} | b!bonzi | b!color {COLOR} | b!hat {HAT} | b!reset\n" +
+    "b!8ball {QUESTION} | b!mock {TEXT} | b!reverse {TEXT} | b!hug {USER} | b!slap {USER} | b!bonzi | b!color {COLOR} | b!hat {HAT} | b!reset | b!wtf | b!rainbowname | b!fancyecho {TEXT} | b!zalgo {TEXT} | b!echo {TEXT} | b!say {TEXT} | b!eccho {TEXT} | b!8ball {QUESTION} | b!coinflip | b!rps {rock/paper/scissors}\n" +
     "__**⚔️ BOSSFIGHT COMMANDS:**__\n" +
     "b!bossfight | b!attack | b!heal | b!bossstats";
 
@@ -615,6 +615,155 @@ socket.on("nuke", () => {
     sendMsg(randomItem(otherUserNukes));
 });
 
+
+// ============================================================
+// EXTRA FUN COMMANDS
+// ============================================================
+
+const wtfMessages = [
+    "sus amogus moment 💀",
+    "POV: Bonzi found the forbidden banana 🍌",
+    "EMOTIONAL DAMAGE 💀",
+    "bro really thought that was gonna work 💀",
+    "bonzi.exe has stopped understanding reality",
+    "when the imposter is sus 😳",
+    "ayo who let Bonzi cook",
+    "skill issue + ratio + banana",
+    "THE WIFI IS HAVING A MOMENT",
+    "2021 called and wants its humor back"
+];
+
+const zalgoChars = [
+    "\u030d", "\u030e", "\u0304", "\u0305", "\u033f",
+    "\u0311", "\u0306", "\u0310", "\u0352", "\u0357",
+    "\u0351", "\u0307", "\u0308", "\u030a", "\u0342",
+    "\u0343", "\u0344", "\u034a", "\u034b", "\u034c",
+    "\u0303", "\u0302", "\u030c", "\u0350", "\u0300",
+    "\u0301", "\u030b", "\u030f", "\u0312", "\u0313"
+];
+
+function makeZalgo(str) {
+    return str.split("").map(char => {
+        if (char === " ") return char;
+
+        let result = char;
+        const count = randomNumber(2, 6);
+
+        for (let i = 0; i < count; i++) {
+            result += randomItem(zalgoChars);
+        }
+
+        return result;
+    }).join("");
+}
+
+function fancyEcho(str) {
+    return "✨ 𝓕𝓪𝓷𝓬𝔂 𝓑𝓸𝓷𝔃𝓲: ✨ " + str + " ✨";
+}
+
+function phoneticEcho(str) {
+    const phonetics = {
+        a: "ah",
+        b: "bee",
+        c: "see",
+        d: "dee",
+        e: "ee",
+        f: "eff",
+        g: "gee",
+        h: "aitch",
+        i: "eye",
+        j: "jay",
+        k: "kay",
+        l: "el",
+        m: "em",
+        n: "en",
+        o: "oh",
+        p: "pee",
+        q: "cue",
+        r: "are",
+        s: "ess",
+        t: "tee",
+        u: "you",
+        v: "vee",
+        w: "double-you",
+        x: "ex",
+        y: "why",
+        z: "zee"
+    };
+
+    return str.split("").map(char => {
+        const lower = char.toLowerCase();
+
+        if (phonetics[lower]) {
+            const word = phonetics[lower];
+
+            return char === char.toUpperCase()
+                ? word.toUpperCase()
+                : word;
+        }
+
+        return char;
+    }).join(" ");
+}
+
+const rainbowColors = [
+    "red",
+    "orange",
+    "yellow",
+    "green",
+    "blue",
+    "purple"
+];
+
+function rainbowName() {
+    // BonziWORLD's color command is used repeatedly to create
+    // the rainbow effect while keeping the bot name unchanged.
+    let index = 0;
+
+    const interval = setInterval(() => {
+        if (index >= rainbowColors.length) {
+            clearInterval(interval);
+            return;
+        }
+
+        cmd("color " + rainbowColors[index]);
+        index++;
+    }, 450);
+
+    cmd("name " + botname);
+}
+
+function playRPS(choice) {
+    const normalized = choice.toLowerCase().trim();
+
+    const choices = [
+        "rock",
+        "paper",
+        "scissors"
+    ];
+
+    if (!choices.includes(normalized)) {
+        return "Use: b!rps rock, b!rps paper, or b!rps scissors";
+    }
+
+    const botChoice = randomItem(choices);
+
+    if (normalized === botChoice) {
+        return `✊ You chose **${normalized}**. I chose **${botChoice}**. It's a tie!`;
+    }
+
+    const playerWins =
+        (normalized === "rock" && botChoice === "scissors") ||
+        (normalized === "paper" && botChoice === "rock") ||
+        (normalized === "scissors" && botChoice === "paper");
+
+    if (playerWins) {
+        return `🎮 You chose **${normalized}**. I chose **${botChoice}**. You win!`;
+    }
+
+    return `🎮 You chose **${normalized}**. I chose **${botChoice}**. I win!`;
+}
+
 // ============================================================
 // MAIN CHAT HANDLER
 // ============================================================
@@ -631,6 +780,105 @@ socket.on("talk", (message) => {
     updateActiveUser(username);
 
     // ========================================================
+    // EXTRA FUN COMMANDS
+    // ========================================================
+
+    if (text === prefix + "wtf") {
+        return sendMsg(randomItem(wtfMessages));
+    }
+
+    // Rainbow name.
+    // The requested "$r$" mechanism becomes "b!r!".
+    // "b!rainbowname" is the friendly command that activates it.
+    if (text === prefix + "rainbowname") {
+        rainbowName();
+        return sendMsg("🌈 My name is going RAINBOW!");
+    }
+
+    if (text === prefix + "r!") {
+        rainbowName();
+        return sendMsg("🌈 RAINBOW BONZI!");
+    }
+
+    if (text.startsWith(prefix + "fancyecho")) {
+        const fancyText =
+            text.substring(prefix.length + 9).trim();
+
+        if (!fancyText) {
+            return sendMsg("✨ Give me something fancy to say!");
+        }
+
+        return sendMsg(fancyEcho(fancyText));
+    }
+
+    if (text.startsWith(prefix + "zalgo")) {
+        const zalgoText =
+            text.substring(prefix.length + 5).trim();
+
+        if (!zalgoText) {
+            return sendMsg("👁️ Give me something to corrupt...");
+        }
+
+        return sendMsg(makeZalgo(zalgoText));
+    }
+
+    if (text.startsWith(prefix + "echo")) {
+        const echoText =
+            text.substring(prefix.length + 4).trim();
+
+        if (!echoText) {
+            return sendMsg("What do you want me to say?");
+        }
+
+        return sendMsg(echoText);
+    }
+
+    // b!say is an alias for b!echo.
+    if (text.startsWith(prefix + "say")) {
+        const sayText =
+            text.substring(prefix.length + 3).trim();
+
+        if (!sayText) {
+            return sendMsg("What do you want me to say?");
+        }
+
+        return sendMsg(sayText);
+    }
+
+    if (text.startsWith(prefix + "eccho")) {
+        const ecchoText =
+            text.substring(prefix.length + 5).trim();
+
+        if (!ecchoText) {
+            return sendMsg("What do you want me to say phonetically?");
+        }
+
+        return sendMsg(phoneticEcho(ecchoText));
+    }
+
+    if (text === prefix + "coinflip") {
+        return sendMsg(
+            Math.random() < 0.5
+                ? "🪙 Heads!"
+                : "🪙 Tails!"
+        );
+    }
+
+    if (text.startsWith(prefix + "rps")) {
+        const rpsChoice =
+            text.substring(prefix.length + 3).trim();
+
+        if (!rpsChoice) {
+            return sendMsg(
+                "🎮 Use b!rps rock, b!rps paper, or b!rps scissors!"
+            );
+        }
+
+        return sendMsg(playRPS(rpsChoice));
+    }
+
+
+    // ========================================================
     // HELP
     // ========================================================
 
@@ -642,12 +890,6 @@ socket.on("talk", (message) => {
     // SAY
     // ========================================================
 
-    if (text.startsWith(prefix + "say")) {
-        const content =
-            text.substring(prefix.length + 3).trim();
-
-        return sendMsg(content);
-    }
 
     // ========================================================
     // APPLE
